@@ -1,33 +1,57 @@
 // MessageSender.tsx
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './sendData.style.css'
+import { useSend_MessageMutation } from '../../Api/messageApi';
 
 export const SendData: React.FC = () => {
   const [chatName, setChatName] = useState('');
   const [userName, setUserName] = useState('');
   const [content, setContent] = useState('');
-  const [timestamp, setTimestamp] = useState('');
+  // const [timestamp, setTimestamp] = useState('');
+  const [send_Message , send_MessageResult] = useSend_MessageMutation();
 
   const sendMessage = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/api/group/sendMessage', {
+      // const response = await axios.post('http://localhost:5000/api/group/sendMessage', {
+      //   chatName: chatName,
+      //   message: [
+      //     {
+      //       sender: userName,
+      //       content: content,
+      //       timestamp: timestamp,
+      //     },
+      //   ],
+      // });
+
+      send_Message({
         chatName: chatName,
         message: [
           {
             sender: userName,
-            content: content,
-            timestamp: timestamp,
+            content: content
           },
         ],
-      });
+      })
 
-      console.log('Message sent successfully:', response.data);
+      // console.log('Message sent successfully:', response.data);
     } catch (error) {
       console.error('Error sending message:', error);
     }
   };
+
+
+  useEffect(()=>{
+    if(send_MessageResult.isLoading === false && send_MessageResult.isSuccess === true){
+      
+      console.log(send_MessageResult);
+      setChatName('');
+      setUserName('');
+      setContent('');
+      
+    }
+  } , [send_MessageResult])
 
   return (
     <div className="message-sender">
@@ -58,14 +82,14 @@ export const SendData: React.FC = () => {
         required
       />
 
-      <label htmlFor="timestamp">Timestamp:</label>
+      {/* <label htmlFor="timestamp">Timestamp:</label>
       <input
         type="text"
         id="timestamp"
         value={timestamp}
         onChange={(e) => setTimestamp(e.target.value)}
         required
-      />
+      /> */}
 
       <button className='sbt-btn' type="button" onClick={sendMessage}>
         Send Message

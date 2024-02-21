@@ -8,7 +8,9 @@ import About from '../components/about/about';
 import Login from '../components/login/Login';
 import { Signup } from '../components/register/Register';
 import UserList from '../components/userList/userList';
-import { CreateChat } from '../components/createChat/CreateChat';
+import CreateChatForm from '../components/createChat/CreateChat';
+import { GroupList } from '../components/groupList/grouplist';
+import Protected from '../protectedRoutes/ProtectedRoutes';
 // import ProtectedRoute from './ProtectedRoute.tsx';
 
 
@@ -21,10 +23,22 @@ const Routes_: React.FC = () => {
         <Route path="/" element={<Home/>} />
         <Route path="/about" element={<About/>} />
         <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/fetch" element={<FetchMessages />} />
+        <Route path="/signUp" element={<Signup />} />
+
+
+        {/* <Route path="/fetch" element={<FetchMessages />} />
         <Route path="/sendData" element={<SendData />} />
         <Route path="/userList" element={<UserList />} />
+        <Route path="/groupList" element={<GroupList />} />
+        <Route path="/createChat" element={<CreateChatForm />} /> */}
+
+
+        <Route path='/fetch' element={<Protected name="fetch" children={<FetchMessages />} />} />
+        <Route path='/sendData' element={<Protected name="sendData" children={<SendData />} />} />
+        <Route path='/userList' element={<Protected name="userList" children={<UserList />} />} />
+        <Route path='/groupList' element={<Protected name="groupList" children={<GroupList />} />} />
+
+        <Route path='/createChat' element={<Protected name="createChat" children={<CreateChatForm />} />} />
 
 
       </ReactRoutes> 

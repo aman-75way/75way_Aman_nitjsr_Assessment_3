@@ -2,6 +2,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Link,useNavigate } from 'react-router-dom';
 import './Navbar.style.css';
+import { NavbarLeft } from './leftPannel/leftSideNavbar';
 
 const Navbar: React.FC = () => {
   const navigate =useNavigate()
@@ -30,27 +31,31 @@ const Navbar: React.FC = () => {
 
   const authToken = localStorage.getItem("token")
   return (
-    <nav className={`navbar ${darkMode ? 'dark-mode' : ''}`}>
-      <ul>
-        <li><Link to="/">Home</Link></li>
-        <li><Link to="/about">About</Link></li>
-        {authToken
-        ?
-        <>
-          <li><Link to="/userList">UserList</Link></li>
-          <li><Link to="/fetch">FetchData</Link></li>
-          <li><Link to="/sendData">Send Data</Link></li>
-          <li className='logout-list' onClick={logout}>Logout</li>
-        </>
-        :
-        <>
-          <li><Link to="/signup">Register</Link></li>
-          <li><Link to="/login">Login</Link></li>
-        </>
-        }
+    <>
+      <nav className={`navbar ${darkMode ? 'dark-mode' : ''}`}>
+        <ul>
+          <li><Link to="/">Home</Link></li>
+          <li><Link to="/about">About</Link></li>
+          {authToken
+          ?
+          <>
+            <li><Link to="/userList">UserList</Link></li>
+            <li><Link to="/groupList">Group List</Link></li>
+            <li><Link to="/createChat">Create Chat</Link></li>
+            <li><Link to="/fetch">FetchData</Link></li>
+            <li><Link to="/sendData">Send Data</Link></li>
+            <li className='logout-list' onClick={logout}>Logout</li>
+          </>
+          :
+          <>
+            <li><Link to="/signUp">Sign Up</Link></li>
+            <li><Link to="/login">Login</Link></li>
+          </>
+          }
 
-      </ul>
-    </nav>
+        </ul>
+      </nav>
+    </>
   );
 };
 

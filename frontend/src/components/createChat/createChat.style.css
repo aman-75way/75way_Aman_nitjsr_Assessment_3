@@ -1,0 +1,17 @@
+.main-Chat-container{
+    border: 2px solid green;
+    max-width: 25vw;
+    margin-left: 30vw;
+    margin-top: 10vh;
+    border-radius: 20px;
+    background-color: var(--background-color);
+}
+
+.heading{
+    margin-left: 90px;
+}
+
+.input-form{
+    margin-left: 3vw;
+    margin-bottom: 10vh;
+}

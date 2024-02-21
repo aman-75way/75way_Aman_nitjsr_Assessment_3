@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Login from '../login/Login';
 import './register.style.css'
 import { useNavigate } from 'react-router-dom';
+import { useRegisterUserMutation } from '../../Api/authApi';
 
 export const Signup = () => {
 
@@ -13,6 +14,9 @@ export const Signup = () => {
   const [password , setPassword ] = useState('');
   const [confirmPassword , setConfirmPassword] = useState("");
   const [register , setRegister] = useState(false);
+  const [token , setToken] = useState("");
+  const [registerUser , registerUserResult] = useRegisterUserMutation();
+  // console.log(registerUser);
 
   // const storeTokenInLocalStorage = useAuth();
   
@@ -20,35 +24,42 @@ export const Signup = () => {
       event.preventDefault();
 
       try {
-
+        
         if(password === confirmPassword){
-              const response = await axios.post("http://localhost:5000/api/register" , {
-                name,mobile,gender,password,confirmPassword
-              });
-
-              if(response.status === 201){
-                  // console.log("Response is : " , response);
-                  const data = await response.data;   // which comes from the backend (index.js)
-                  const token = data.token;
-                  // console.log("Signup token is : " , token);
-                  // we maintain below one line with the help of store in future......
-                  localStorage.setItem("token" , token);
-                  // storeTokenInLocalStorage(token);
-
-                  setName("");
-                  setMobile("");
-                  setGender("");
-                  setPassword("");
-                  setConfirmPassword("");
-                  setRegister(true);
-
-                  console.log(response);
-                  navigate('/login');
-              }
-
+           registerUser({ name,mobile,gender,password,confirmPassword });
         }else{
           alert("Password is not matching");
         }
+
+        // if(password === confirmPassword){
+        //       const response = await axios.post("http://localhost:5000/api/register" , {
+        //         name,mobile,gender,password,confirmPassword
+        //       });
+
+        //       if(response.status === 201){
+        //           // console.log("Response is : " , response);
+        //           const data = await response.data;   // which comes from the backend (index.js)
+        //           const token = data.token;
+        //           // console.log("Signup token is : " , token);
+        //           // we maintain below one line with the help of store in future......
+        //           localStorage.setItem("token" , token);
+        //           // storeTokenInLocalStorage(token);
+
+        //           setName("");
+        //           setMobile("");
+        //           setGender("");
+        //           setPassword("");
+        //           setConfirmPassword("");
+        //           setRegister(true);
+
+        //           console.log(response);
+        //           navigate('/login');
+        //       }
+
+        // }else{
+        //   alert("Password is not matching");
+        // }
+
       } 
       catch (error : any) {
         const fieldPath = error.response.data.errors[0].path;
@@ -57,6 +68,22 @@ export const Signup = () => {
         alert(`${fieldPath}  ::  ${errorMsg}`)
       }
   }
+
+
+  useEffect(()=>{
+    if(registerUserResult.isLoading === false && registerUserResult.isSuccess === true){
+      console.log("Create Post Data " , registerUserResult.data);
+      setToken(registerUserResult.data.token);
+        setName("");
+        setMobile("");
+        setGender("");
+        setPassword("");
+        setConfirmPassword("");
+        setRegister(true);
+        navigate('/login');
+      
+    }
+  } , [registerUserResult]);
 
   return (
     <>

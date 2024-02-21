@@ -1,52 +1,73 @@
-// MessageSender.tsx
-
 import React, { useState } from 'react';
 import axios from 'axios';
-import './sendData.style.css'
+import './createChat.style.css'
+import { NavbarLeft } from '../../navbar/leftPannel/leftSideNavbar';
 
-export const CreateChat: React.FC = () => {
-  const [chatName, setChatName] = useState('');
-  const [userName, setUserName] = useState('');
+const CreateChatForm: React.FC = () => {
+  const [chatName, setChatName] = useState<string>('');
+  const [participantNames, setParticipantNames] = useState<string>('');
 
-  const sendMessage = async () => {
+
+  const handleCreateChat = async () => {
     try {
+      // Validate chatName and participantNames here if needed
+  
+      // Convert participantNames to an array
+      const participantArray = participantNames.split(',').map((name) => name.trim());
+  
+      console.log(participantArray);
+  
+      // Send a POST request to create the chat
       const response = await axios.post('http://localhost:5000/api/createChat', {
-        chatName: chatName,
-        userName : userName
+        chatName,
+        participants: participantArray,
       });
-
-      console.log('Message sent successfully:', response.data);
+  
+      console.log(response.data);
+  
+      // Reset the form after successful creation
+      setChatName('');
+      setParticipantNames('');
+      alert(`Chat With Name - ${chatName} created Successfully`)
     } catch (error) {
-      console.error('Error sending message:', error);
+      console.error('Error creating chat:', error);
     }
   };
+  
+
 
   return (
-    <div className="message-sender">
-      <label htmlFor="chatId">Chat Name:</label>
-      <input
-        type="text"
-        id="chatName"
-        value={chatName}
-        onChange={(e) => setChatName(e.target.value)}
-        required
-      />
+    <>
+      <div className='main-Chat-container'>
+        <h2 className='heading'>Create Chat</h2>
+        <form className='input-form'>
+          <label htmlFor="chatName">Chat Name:</label>
+          <input
+            type="text"
+            id="chatName"
+            name="chatName"
+            value={chatName}
+            onChange={(e) => setChatName(e.target.value)}
+            required
+            />
 
-      <label htmlFor="userId">User Name:</label>
-      <input
-        type="text"
-        id="userName"
-        value={userName}
-        onChange={(e) => setUserName(e.target.value)}
-        required
-      />
+          <label htmlFor="participantNames">Participant Names (comma-separated):</label>
+          <input
+            type="text"
+            id="participantNames"
+            name="participantNames"
+            value={participantNames}
+            onChange={(e) => setParticipantNames(e.target.value)}
+            required
+            />
 
-
-      <button className='sbt-btn' type="button" onClick={sendMessage}>
-        Send Message
-      </button>
-    </div>
+          <button type="button" onClick={handleCreateChat}>
+            Create Chat
+          </button>
+        </form>
+      </div>
+    </>
   );
 };
 
-// export default MessageSender;
+export default CreateChatForm;
